@@ -73,9 +73,6 @@ const Update = asyncHandler(async (req, res) => {
 		const updatedUser = await user.save()
 
 		res.json({
-			_id: updatedUser._id,
-			name: updatedUser.name,
-			email: updatedUser.email,
 			token: GenerateToken({ id: updatedUser._id, name: updatedUser.name, email: updatedUser.email }),
 		})
 	} else {
