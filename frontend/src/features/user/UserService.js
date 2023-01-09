@@ -3,14 +3,17 @@ import { DecodeToken } from '../../helper/DecodeToken';
 
 const API_URL = '/api/users/';
 
+// Login User
 const login = async (user_data) => {
-	const response = await axios.post(API_URL + 'login', user_data);
 
-	if(response.data) {
-		localStorage.setItem('token', JSON.stringify(response.data));
-	}
+    const response = await axios.post(API_URL + 'login', user_data)
 
-	return DecodeToken(response.data);
+    if(response.data) {
+        // Add Token
+        localStorage.setItem('token', JSON.stringify(response.data));
+    }   
+    
+    return DecodeToken(response.data);
 };
 
 const register = async (user_data) => {
@@ -63,10 +66,13 @@ const details = async (token) => {
 	return response.data
 };
 
-const logout = async () => {
-	localStorage.clear();
+// Logout User
+const logout = () => {
+    localStorage.clear();
 };
 
-const userService = { login, register, update, delete_user, details, logout };
+const UserService = {
+    login, register, update, delete_user, details, logout
+}       
 
-export default userService;
+export default UserService;

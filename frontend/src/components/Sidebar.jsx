@@ -23,7 +23,7 @@ function Sidebar() {
 			<header>
 				<div className="image-text">
 					<span className="image">
-						
+						<img src={require('./test.jpg')} alt="" />
 					</span>
 
 					<div className="text logo-text">
@@ -49,6 +49,12 @@ function Sidebar() {
 							<Link to="/timelogs">
 								<i className='bx bx-time-five icon'></i>
 								<span className="text nav-text">Time Logs</span>
+							</Link>
+						</li>
+						<li className="nav-link">
+							<Link to="/timelogs">
+								<i className='bx bx-spreadsheet icon'></i>
+								<span className="text nav-text">Today's Schedule</span>
 							</Link>
 						</li>
 					</ul>
