@@ -24,10 +24,10 @@ export const login = createAsyncThunk('user/login', async (user, thunkAPI) => {
 
 export const register = createAsyncThunk('user/register', async (user, thunkAPI) => {
 	try {
-		return UserService.register(user);
+		return await UserService.register(user);
 	} catch (error) {
 		const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-      return thunkAPI.rejectWithValue(message)
+        return thunkAPI.rejectWithValue(message)
 	}
 })
 
