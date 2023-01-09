@@ -1,0 +1,38 @@
+{
+  "name": "mern-boilerplate",
+  "description": "This is a MERN Boilerplate for all of the applications that are going to be made in the future!",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "server": "nodemon -L backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dayne-Game/mern-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Dayne-Game/mern-boilerplate/issues"
+  },
+  "homepage": "https://github.com/Dayne-Game/mern-boilerplate#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "colors": "^1.4.0",
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
+    "joi": "^17.7.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.8.3",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.8.0"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "nodemon": "^2.0.20"
+  },
+}
