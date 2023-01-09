@@ -3,6 +3,7 @@
   "description": "This is a MERN Boilerplate for all of the applications that are going to be made in the future!",
   "version": "1.0.0",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "server": "nodemon -L backend/server.js"
   },
@@ -34,5 +35,5 @@
   "devDependencies": {
     "concurrently": "^7.6.0",
     "nodemon": "^2.0.20"
-  },
+  }
 }
