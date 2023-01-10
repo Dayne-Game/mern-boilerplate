@@ -31,10 +31,12 @@ function AccountSettings() {
 
         if (isError) {
             toast.error(message)
+			dispatch(reset());
         }
 
         if (isSuccess) {
             toast.success('Account Information Updated!');
+			dispatch(reset());
         }
 
         if (!selectedFile) {
@@ -48,7 +50,6 @@ function AccountSettings() {
         // free memory when ever this component is unmounted
         return () => {
             URL.revokeObjectURL(objectUrl);
-            dispatch(reset());
         } 
 
 	}, [user, navigate, selectedFile, dispatch, message, isError, isSuccess])
@@ -100,8 +101,8 @@ function AccountSettings() {
 			<div className='row'>
 				<div className="col-sm-12">
 					<h4 className='mt-4 mb-3'>Account Information</h4>
-					<form onSubmit={submitHandler}>
-						<div className="card border-0" style={{ width: '700px' }}>
+					<form onSubmit={submitHandler}  style={{ width: '700px' }}>
+						<div className="card border-0 mb-3">
 							<div class="card-body">
 								<div className='col-sm-12'>
 									<div className="d-flex justify-content-start align-items-center">
@@ -119,24 +120,24 @@ function AccountSettings() {
 								</div>
 							</div>
 						</div>
-						<div className='form-group mb-3'>
-							<input type="text" className="form-control form-input shadow-none" id="name" name="name" value={name} placeholder='Name' onChange={(e) => setName(e.target.value)}></input>
+						<div className='mb-3'>
+							<input type="text" className="form-control border-0 p-10" id="name" name="name" value={name} placeholder='Name' onChange={(e) => setName(e.target.value)}></input>
 						</div>
-						<div className='form-group mb-3'>
-							<input type="email" className="form-control form-input shadow-none" id="email" name="email" value={email} placeholder='Email address' onChange={(e) => setEmail(e.target.value)}></input>
+						<div className='mb-3'>
+							<input type="email" className="form-control border-0 p-10" id="email" name="email" value={email} placeholder='Email address' onChange={(e) => setEmail(e.target.value)}></input>
 						</div>
-						<div className='form-group mb-3'>
+						<div className='mb-3'>
 							<div className='input-group'>
-								<input type="password" className="form-control form-input shadow-none" id="password" name="password" value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)}></input>
+								<input type="password" className="form-control border-0 p-10" id="password" name="password" value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)}></input>
 							</div>
 						</div>
-						<div className='form-group mb-3'>
+						<div className='mb-3'>
 							<div className='input-group'>
-								<input type="password" className="form-control form-input shadow-none" id="password2" name="password2" value={password2} placeholder='Confirm Password' onChange={(e) => setPassword2(e.target.value)}></input>
+								<input type="password" className="form-control border-0 p-10" id="password2" name="password2" value={password2} placeholder='Confirm Password' onChange={(e) => setPassword2(e.target.value)}></input>
 							</div>
 						</div>
 						<div className='d-grid mb-3'>
-							<button type="submit" className="btn btn-primary btn-block p-10">{ isLoading ? <i className="fa-solid fa-circle-notch fa-spin loading-btn-size"></i> : "Sign Up" }</button>
+							<button type="submit" className="btn btn-primary btn-block p-10">{ isLoading ? <i className="fa-solid fa-circle-notch fa-spin loading-btn-size"></i> : "Update Details" }</button>
 						</div>
 					</form>
 				</div>
