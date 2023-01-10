@@ -27,6 +27,7 @@ const register = async (user_data) => {
 };
 
 const update = async (user_data, token) => {
+
 	const config = {
 		headers: {
 			Authorization: `Bearer ${token}`,
@@ -34,6 +35,8 @@ const update = async (user_data, token) => {
 	}
 
 	const response = await axios.put(API_URL + 'update', user_data, config);
+
+	console.log(response);
 
 	if(response.data) {
 		localStorage.setItem('token', JSON.stringify(response.data));

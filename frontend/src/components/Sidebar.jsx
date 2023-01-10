@@ -23,7 +23,7 @@ function Sidebar() {
 			<header>
 				<div className="image-text">
 					<span className="image">
-						<img src={require('./test.jpg')} alt="" />
+						<img src={user.image} alt="" />
 					</span>
 
 					<div className="text logo-text">

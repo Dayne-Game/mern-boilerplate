@@ -12,7 +12,7 @@ const Login = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email });
 
     if(user && await user.matchPassword(password)) {
-        res.json(GenerateToken({ id: user._id, name: user.name, email: user.email }))
+        res.json(GenerateToken({ id: user._id, name: user.name, email: user.email, image: user.image }))
     } else {
         res.status(400); throw new Error("Email or Password is Invalid");
     }
@@ -43,7 +43,7 @@ const Register = asyncHandler(async(req, res) => {
 
 	const user = await new_user.save();
 
-	res.json(GenerateToken({ id: user._id, name: user.name, email: user.email }));
+	res.json(GenerateToken({ id: user._id, name: user.name, email: user.email, image: user.image }));
 });
 
 // @DESC	Get Logged in User Details
@@ -53,30 +53,29 @@ const Current = asyncHandler(async(req, res) => {
 	const user = await User.findById(req.user._id);
 
 	if(user) {
-		res.json({ id: user._id, name: user.name, email: user.email })
+		res.json({ id: user._id, name: user.name, email: user.email, image: user.image })
 	} else {
 		res.status(404); throw new Error('User not Found');
 	}
 })
 
 // @DESC    Update User
-// @ROUTE   /api/users/update/:id
+// @ROUTE   /api/users/update/
 // @ACCESS  PRIVATE
 const Update = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user._id)
+	const user = await User.findById(req.user.id)
 
 	if (user) {
 		user.name = req.body.name || user.name
 		user.email = req.body.email || user.email
+		user.image = req.body.image || user.image
 		if (req.body.password) {
 			user.password = req.body.password
 		}
 
 		const updatedUser = await user.save()
 
-		res.json({
-			token: GenerateToken({ id: updatedUser._id, name: updatedUser.name, email: updatedUser.email }),
-		})
+		res.json(GenerateToken({ id: updatedUser._id, name: updatedUser.name, image: updatedUser.image, email: updatedUser.email }));
 	} else {
 		res.status(404)
 		throw new Error('User not found')

@@ -6,6 +6,8 @@ let token = localStorage.getItem('token');
 
 const initialState = {
     user: token ? jwt_decode(token) : null,
+    token: JSON.parse(token),
+    userInfo: '',
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -33,7 +35,7 @@ export const register = createAsyncThunk('user/register', async (user, thunkAPI)
 
 export const details = createAsyncThunk('user/details', async (_, thunkAPI) => {
 	try {
-		const token = thunkAPI.getState().user.user.token
+		const token = localStorage.getItem('token');
 		return await UserService.details(token)
 	} catch (error) {
 		const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -43,8 +45,8 @@ export const details = createAsyncThunk('user/details', async (_, thunkAPI) => {
 
 export const update = createAsyncThunk('user/update', async (user, thunkAPI) => {
 	try {
-		const token = thunkAPI.getState().user.user.token
-		return UserService.update(user, token);
+		const token = thunkAPI.getState().user.token
+		return await UserService.update(user, token);
 	} catch (error) {
 		const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
       	return thunkAPI.rejectWithValue(message)
@@ -53,7 +55,7 @@ export const update = createAsyncThunk('user/update', async (user, thunkAPI) => 
 
 export const delete_user = createAsyncThunk('user/delete', async (_, thunkAPI) => {
 	try {
-		const token = thunkAPI.getState().user.user.token
+		const token = thunkAPI.getState().user.token
 		return await UserService.delete_user(token)
 	} catch (error) {
 		const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -102,7 +104,7 @@ export const UserSlice = createSlice({
         .addCase(details.fulfilled, (state, action) => {
             state.isLoading = false
             state.isSuccess = true
-            state.user = action.payload
+            state.userInfo = action.payload
         })
         .addCase(details.rejected, (state, action) => {
             state.isLoading = false

@@ -1,34 +1,51 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { update, reset } from '../../features/user/UserSlice';
+import Message from '../../components/Message'
+import axios from 'axios';
 
 function AccountSettings() {
     const navigate = useNavigate()
+	const dispatch = useDispatch()
   
-    const { user } = useSelector((state) => state.user)
+    const { user, isError, isLoading, isSuccess, message } = useSelector((state) => state.user);
 
+	const [name, setName] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [password2, setPassword2] = useState("");
 	const [image, setImage] = useState("");
 	const [selectedFile, setSelectedFile] = useState()
     const [preview, setPreview] = useState()
 	const [uploading, setUploading] = useState(false);
+	const [errorMessage, setErrorMessage] = useState(null);
   
     useEffect(() => {
       if (!user) {
-        navigate('/login')
+        navigate("/login");
       }
 
-		if (!selectedFile) {
-			setPreview(undefined)
-			return
-		}
+	  if(user) {
+		setName(user.name);
+		setEmail(user.email);
+	  }
 
-		const objectUrl = URL.createObjectURL(selectedFile)
-		setPreview(objectUrl)
+      if (!selectedFile) {
+        setPreview(undefined);
+        return;
+      }
 
-		// free memory when ever this component is unmounted
-		return () => URL.revokeObjectURL(objectUrl)
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreview(objectUrl);
 
-	}, [user, navigate, selectedFile])
+      // free memory when ever this component is unmounted
+      return () => {
+		dispatch(reset);
+		URL.revokeObjectURL(objectUrl);
+	  } 
+
+	}, [user, navigate, selectedFile, dispatch, message, isSuccess])
 
 	const uploadFileHandler = async (e) => {
 		const file = e.target.files[0];
@@ -43,9 +60,6 @@ function AccountSettings() {
 
         // I've kept this example simple by using the first image instead of multiple
         setSelectedFile(e.target.files[0])
-	
-		const icon_text = document.querySelector(".icon-text");
-		icon_text.textContent = e.target.files[0].name;
 	
 		try {
 		  const config = {
@@ -62,30 +76,65 @@ function AccountSettings() {
 		  console.error(error);
 		  setUploading(false);
 		}
-	  };
+	};
+
+	const submitHandler = (e) => {
+		e.preventDefault();
+
+		if(password !== password2) {
+            setErrorMessage("Passwords Do not match");
+        } else {
+            const userData = { name, email, image, password }
+            dispatch(update(userData));
+        }
+	}
 
 	return (
 		<>
 			<div className='row'>
 				<div className="col-sm-12">
 					<h4 className='mt-4 mb-3'>Account Information</h4>
-					<div className="card border-0" style={{ width: '700px' }}>
-						<div class="card-body">
-
-							<div className='col-sm-12'>
-								<div className="d-flex justify-content-start align-items-center">
-									<span className='profile_img_account'>
-										{selectedFile ? <img id="profile_image_preview" src={preview} alt="" /> : <img id="profile_image_preview" src={require('../../components/test.jpg')} alt="" />}
-									</span>
-									<p className='flex-grow-1' style={{ marginBottom: '0px', marginLeft: '20px' }}>{selectedFile ? selectedFile.name : 'Profile Picture'}</p>
-									<div className='custom_upload_container'>
-										Upload new Profile Image
-										<input type="file" id="profile_image_upload" onChange={uploadFileHandler} className='custom_file_upload' />
+					<form onSubmit={submitHandler}>
+						{ isError && <Message variant="danger">{message}</Message> }
+						{ errorMessage && <Message variant="danger">{errorMessage}</Message> }
+						<div className="card border-0" style={{ width: '700px' }}>
+							<div class="card-body">
+								<div className='col-sm-12'>
+									<div className="d-flex justify-content-start align-items-center">
+										<span className='profile_img_account'>
+											{selectedFile ? <img id="profile_image_preview" src={preview} alt="" /> : <img id="profile_image_preview" src={user.image} alt="" />}
+										</span>
+										<p className='flex-grow-1' style={{ marginBottom: '0px', marginLeft: '20px' }}>{selectedFile ? selectedFile.name : 'Profile Picture'}</p>
+										<div className='custom_upload_container'>
+											{uploading? (
+												<span style={{fontWeight: 'bold'}}>UPLOADING <i className="fa-solid fa-circle-notch fa-spin upload-image-loader"></i></span>
+											) : ('Browse')}
+											<input type="file" id="profile_image_upload" onChange={uploadFileHandler} className='custom_file_upload' />
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
+						<div className='form-group mb-3'>
+							<input type="text" className="form-control form-input shadow-none" id="name" name="name" value={name} placeholder='Name' onChange={(e) => setName(e.target.value)}></input>
+						</div>
+						<div className='form-group mb-3'>
+							<input type="email" className="form-control form-input shadow-none" id="email" name="email" value={email} placeholder='Email address' onChange={(e) => setEmail(e.target.value)}></input>
+						</div>
+						<div className='form-group mb-3'>
+							<div className='input-group'>
+								<input type="password" className="form-control form-input shadow-none" id="password" name="password" value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)}></input>
+							</div>
+						</div>
+						<div className='form-group mb-3'>
+							<div className='input-group'>
+								<input type="password" className="form-control form-input shadow-none" id="password2" name="password2" value={password2} placeholder='Confirm Password' onChange={(e) => setPassword2(e.target.value)}></input>
+							</div>
+						</div>
+						<div className='d-grid mb-3'>
+							<button type="submit" className="btn btn-primary btn-block p-10">{ isLoading ? <i className="fa-solid fa-circle-notch fa-spin loading-btn-size"></i> : "Sign Up" }</button>
+						</div>
+					</form>
 				</div>
 			</div>
 		</>

@@ -8,6 +8,7 @@ import connectDB from "./config/db.js";
 
 // Import Routes
 import UserRoutes from "./routes/UserRoutes.js";
+import UploadRoutes from "./routes/UploadRoutes.js";
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ if (process.env.NODE_ENV === "development") {
 app.use(express.json());
 
 app.use("/api/users", UserRoutes);
+app.use("/api/upload", UploadRoutes);
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
