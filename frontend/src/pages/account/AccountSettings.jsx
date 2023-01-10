@@ -102,7 +102,7 @@ function AccountSettings() {
 								<div className='col-sm-12'>
 									<div className="d-flex justify-content-start align-items-center">
 										<span className='profile_img_account'>
-											{selectedFile ? <img id="profile_image_preview" src={preview} alt="" /> : <img id="profile_image_preview" src={user.image} alt="" />}
+											{selectedFile ? <img id="profile_image_preview" src={preview} alt="" /> : <img id="profile_image_preview" src={user && user.image} alt="" />}
 										</span>
 										<p className='flex-grow-1' style={{ marginBottom: '0px', marginLeft: '20px' }}>{selectedFile ? selectedFile.name : 'Profile Picture'}</p>
 										<div className='custom_upload_container'>

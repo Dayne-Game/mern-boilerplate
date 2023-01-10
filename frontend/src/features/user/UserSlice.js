@@ -6,8 +6,6 @@ let token = localStorage.getItem('token');
 
 const initialState = {
     user: token ? jwt_decode(token) : null,
-    token: JSON.parse(token),
-    userInfo: '',
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -33,19 +31,9 @@ export const register = createAsyncThunk('user/register', async (user, thunkAPI)
 	}
 })
 
-export const details = createAsyncThunk('user/details', async (_, thunkAPI) => {
-	try {
-		const token = localStorage.getItem('token');
-		return await UserService.details(token)
-	} catch (error) {
-		const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
-		return thunkAPI.rejectWithValue(message)
-	}
-})
-
 export const update = createAsyncThunk('user/update', async (user, thunkAPI) => {
 	try {
-		const token = thunkAPI.getState().user.token
+		const token = JSON.parse(localStorage.getItem('token'));
 		return await UserService.update(user, token);
 	} catch (error) {
 		const message = (error.response && error.response.data && error.response.data.message) || error.message || error.toString()
@@ -97,19 +85,6 @@ export const UserSlice = createSlice({
             state.isError = true
             state.message = action.payload
             state.user = null
-        })
-        .addCase(details.pending, (state) => {
-            state.isLoading = true
-        })
-        .addCase(details.fulfilled, (state, action) => {
-            state.isLoading = false
-            state.isSuccess = true
-            state.userInfo = action.payload
-        })
-        .addCase(details.rejected, (state, action) => {
-            state.isLoading = false
-            state.isError = true
-            state.message = action.payload
         })
         .addCase(update.pending, (state) => {
             state.isLoading = true
