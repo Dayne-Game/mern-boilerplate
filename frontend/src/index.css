@@ -333,3 +333,34 @@ a {
 .loading-btn-size {
   font-size: 20px;
 }
+
+.profile_img_account > img {
+	height: 70px;
+	width: 70px;
+	border-radius: 4px;
+	object-fit: cover;
+}
+
+.custom_upload_container {
+	padding: 5px 15px;
+	background: transparent;
+	border: 1px solid #ddd;
+	position: relative;
+	color: #333;
+	border-radius: 6px;
+	text-align: center;
+	float: left;
+	cursor: pointer;
+}
+
+.custom_file_upload {
+	position: absolute;
+	z-index: 1000;
+	opacity: 0;
+	cursor: pointer;
+	right: 0;
+	top: 0;
+	height: 100%;
+	font-size: 24px;
+	width: 100%;
+}
