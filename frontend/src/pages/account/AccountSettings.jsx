@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { update, reset } from '../../features/user/UserSlice';
-import Message from '../../components/Message'
+import { toast } from 'react-toastify'
 import axios from 'axios';
 
 function AccountSettings() {
@@ -22,30 +22,36 @@ function AccountSettings() {
 	const [errorMessage, setErrorMessage] = useState(null);
   
     useEffect(() => {
-      if (!user) {
-        navigate("/login");
-      }
+        if (!user) {
+            navigate("/login");
+        } else {
+            setName(user.name);
+            setEmail(user.email);
+        }
 
-	  if(user) {
-		setName(user.name);
-		setEmail(user.email);
-	  }
+        if (isError) {
+            toast.error(message)
+        }
 
-      if (!selectedFile) {
-        setPreview(undefined);
-        return;
-      }
+        if (isSuccess) {
+            toast.success('Account Information Updated!');
+        }
 
-      const objectUrl = URL.createObjectURL(selectedFile);
-      setPreview(objectUrl);
+        if (!selectedFile) {
+            setPreview(undefined);
+            return;
+        }
 
-      // free memory when ever this component is unmounted
-      return () => {
-		dispatch(reset);
-		URL.revokeObjectURL(objectUrl);
-	  } 
+        const objectUrl = URL.createObjectURL(selectedFile);
+        setPreview(objectUrl);
 
-	}, [user, navigate, selectedFile, dispatch, message, isSuccess])
+        // free memory when ever this component is unmounted
+        return () => {
+            URL.revokeObjectURL(objectUrl);
+            dispatch(reset());
+        } 
+
+	}, [user, navigate, selectedFile, dispatch, message, isError, isSuccess])
 
 	const uploadFileHandler = async (e) => {
 		const file = e.target.files[0];
@@ -82,7 +88,7 @@ function AccountSettings() {
 		e.preventDefault();
 
 		if(password !== password2) {
-            setErrorMessage("Passwords Do not match");
+            toast.error("Passwords Do not match");
         } else {
             const userData = { name, email, image, password }
             dispatch(update(userData));
@@ -95,8 +101,6 @@ function AccountSettings() {
 				<div className="col-sm-12">
 					<h4 className='mt-4 mb-3'>Account Information</h4>
 					<form onSubmit={submitHandler}>
-						{ isError && <Message variant="danger">{message}</Message> }
-						{ errorMessage && <Message variant="danger">{errorMessage}</Message> }
 						<div className="card border-0" style={{ width: '700px' }}>
 							<div class="card-body">
 								<div className='col-sm-12'>

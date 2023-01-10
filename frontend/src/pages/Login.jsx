@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { login, reset } from '../features/user/UserSlice'
 import Message from '../components/Message'
+import { toast } from 'react-toastify'
 
 function Login() {
 
@@ -16,11 +17,16 @@ function Login() {
     const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.user);
 
     useEffect(() => {
+
+        if(isError) {
+            toast.error(message);
+        }
+
         if (isSuccess || user) {
             navigate('/dashboard')
         }
 
-        dispatch(reset);
+        dispatch(reset());
     }, [user, isError, isSuccess, message, navigate, dispatch])
 
     const onChange = (e) => {
@@ -40,7 +46,6 @@ function Login() {
         <div className='form-container text-center'>
             <h3 className='mb-3'>Sign in</h3>
             <form onSubmit={onSubmit}>
-                { isError && <Message variant="danger">{message}</Message> }
                 <div className='form-group mb-3'>
                     <input type="email" className="form-control form-input shadow-none" id="email" name="email" value={email} placeholder='Email address' onChange={onChange}></input>
                 </div>

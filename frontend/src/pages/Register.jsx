@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { register, reset } from '../features/user/UserSlice'
-import Message from '../components/Message'
+import { toast } from 'react-toastify'
 
 function Register() {
 
     const [formData, setFormData] = useState({ name: '', email: '', password: '', password2: '' });
-
-    const [errorMessage, setErrorMessage] = useState(null);
 
     const { name, email, password, password2 } = formData;
 
@@ -18,11 +16,16 @@ function Register() {
     const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.user);
 
     useEffect(() => {
+
+        if(isError) {
+            toast.error(message);
+        }
+
         if (isSuccess || user) {
             navigate('/dashboard')
         }
 
-        dispatch(reset);
+        dispatch(reset());
     }, [user, isError, isSuccess, message, navigate, dispatch])
 
     const onChange = (e) => {
@@ -33,7 +36,7 @@ function Register() {
         event.preventDefault();
 
         if(password !== password2) {
-            setErrorMessage("Passwords Do not match");
+            toast.error("Passwords Do not match");
         } else {
             const userData = { name, email, password }
             dispatch(register(userData));
@@ -44,8 +47,6 @@ function Register() {
         <div className='form-container text-center'>
             <h3 className='mb-3'>Sign up</h3>
             <form onSubmit={onSubmit}>
-                { isError && <Message variant="danger">{message}</Message> }
-                { errorMessage && <Message variant="danger">{errorMessage}</Message> }
                 <div className='form-group mb-3'>
                     <input type="text" className="form-control form-input shadow-none" id="name" name="name" value={name} placeholder='Name' onChange={onChange}></input>
                 </div>

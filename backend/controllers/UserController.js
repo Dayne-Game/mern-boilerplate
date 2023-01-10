@@ -66,6 +66,17 @@ const Update = asyncHandler(async (req, res) => {
 	const user = await User.findById(req.user.id)
 
 	if (user) {
+
+		if(user.email !== req.body.email) {
+			let email = req.body.email;
+
+			const checkUser = await User.findOne({ email });
+
+			if (checkUser) {
+				res.status(400); throw new Error("This email is already in use");
+			}
+		}
+
 		user.name = req.body.name || user.name
 		user.email = req.body.email || user.email
 		user.image = req.body.image || user.image
