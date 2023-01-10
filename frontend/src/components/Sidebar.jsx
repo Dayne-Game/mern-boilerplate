@@ -61,6 +61,12 @@ function Sidebar() {
 				</div>
 
 				<div className="bottom-content">
+					<li>
+						<Link to="/my-account">
+							<i className='bx bx-user icon' ></i>
+							<span className="text nav-text">My Account</span>
+						</Link>
+					</li>
 					<li className="logout">
 						<a href="#" onClick={onLogout}>
 							<i className='bx bx-log-out icon' ></i>
