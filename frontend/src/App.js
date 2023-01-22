@@ -8,6 +8,8 @@ import Layout from './components/Layout'
 import { TokenExpiryCheck } from './helper/TokenExpiryCheck'
 import Register from './pages/Register'
 import AccountSettings from './pages/account/AccountSettings'
+import RequestPasswordReset from './pages/password-reset/RequestPasswordReset';
+import PasswordReset from './pages/password-reset/PasswordReset';
 
 function App() {
 
@@ -25,12 +27,14 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route element={<Layout hideHeaderPaths={["/login", "/register"]} />}>
+          <Route element={<Layout hideHeaderPaths={["/login", "/register", "/request-password-reset", "/password-reset/"]} />}>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/my-account" element={<AccountSettings />} />
+			<Route path="/request-password-reset" element={<RequestPasswordReset />} />
+			<Route path="/password-reset/:id/:resetToken" element={<PasswordReset />} />
           </Route>
         </Routes>
       </Router>
