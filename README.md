@@ -1,31 +1,20 @@
 # MERN Boilerplate
 
-This is a MERN Boilerplate for all of the applications that are going to be made in the future!
+This is a MERN Boilerplate for all of the applications that are going to be made in the future! This project is all done now!
 
-Future TimeLog Code
+Remeber!
 
-const mongoose = require('mongoose');
-const DayTimelog = mongoose.model('DayTimelog');
+Copy content into a seperate folder.
 
-const updateTimelog = async (req, res) => {
-    try {
-        const dayTimelogId = req.params.dayId;
-        const timelogId = req.params.timelogId;
-        const updates = req.body;
-        const dayTimelog = await DayTimelog.findById(dayTimelogId);
-        if (!dayTimelog) {
-            return res.status(404).send({ error: 'Day timelog not found' });
-        }
-        const timelog = dayTimelog.timelogs.id(timelogId);
-        if (!timelog) {
-            return res.status(404).send({ error: 'Timelog not found' });
-        }
-        Object.assign(timelog, updates);
-        await dayTimelog.save();
-        return res.status(200).send({ dayTimelog });
-    } catch (error) {
-        return res.status(500).send({ error });
-    }
-};
+npm install
+cd /frontend && npm install
 
-router.put("/daytimelog/:dayId/timelog/:timelogId", updateTimelog);
+then:
+npm run server
+
+cd /frontend
+npm run start
+
+Hope you enjoy! This has been a fun little project!
+
+
