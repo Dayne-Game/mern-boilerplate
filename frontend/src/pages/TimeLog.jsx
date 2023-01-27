@@ -2,14 +2,14 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
-function Dashboard() {
+function TimeLog() {
     const navigate = useNavigate()
   
     const { user } = useSelector((state) => state.user)
 
   
     useEffect(() => {
-      document.title = "MGMT | Dashboard";
+      document.title = "MGMT | Time Logs";
       if (!user) {
         navigate('/login')
       }
@@ -18,9 +18,9 @@ function Dashboard() {
 
     return (
         <>
-          <h1>Welcome, {user && user.name}</h1>
+          <h1>{user && user.name}, your Time Logs</h1>
         </>
     )
 }
 
-export default Dashboard;
+export default TimeLog;

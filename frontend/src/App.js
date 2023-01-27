@@ -10,6 +10,7 @@ import Register from './pages/Register'
 import AccountSettings from './pages/account/AccountSettings'
 import RequestPasswordReset from './pages/password-reset/RequestPasswordReset';
 import PasswordReset from './pages/password-reset/PasswordReset';
+import TimeLog from './pages/TimeLog';
 
 function App() {
 
@@ -33,8 +34,9 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/my-account" element={<AccountSettings />} />
-			<Route path="/request-password-reset" element={<RequestPasswordReset />} />
-			<Route path="/password-reset/:id/:resetToken" element={<PasswordReset />} />
+            <Route path="/request-password-reset" element={<RequestPasswordReset />} />
+            <Route path="/password-reset/:id/:resetToken" element={<PasswordReset />} />
+            <Route path="/timelogs" element={<TimeLog />} />
           </Route>
         </Routes>
       </Router>

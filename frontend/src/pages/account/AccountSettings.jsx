@@ -22,6 +22,7 @@ function AccountSettings() {
 	const [errorMessage, setErrorMessage] = useState(null);
   
     useEffect(() => {
+		document.title = "MGMT | My Account";
         if (!user) {
             navigate("/login");
         } else {
@@ -62,6 +63,7 @@ function AccountSettings() {
 
 		if (!e.target.files || e.target.files.length === 0) {
             setSelectedFile(undefined)
+			setUploading(false);
             return
         }
 

@@ -1,0 +1,28 @@
+body {
+    background: #f1f1f1;
+}
+
+.image-container > img {
+    height: 80px;
+	width: 80px;
+	border-radius: 100px;
+	object-fit: cover;
+    margin-right: 20px;
+}
+
+.aci-text-container > p {
+    margin-bottom: 0px !important;
+}
+
+.aci-text-container > h5 {
+    font-weight: 600;
+}
+
+.aci-label {
+    color: #aaa;
+    margin-bottom: 5px !important;
+}
+
+.aci-info-container {
+    margin-bottom: 20px;
+}
