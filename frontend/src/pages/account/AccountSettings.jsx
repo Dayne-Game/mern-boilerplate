@@ -19,7 +19,6 @@ function AccountSettings() {
 	const [selectedFile, setSelectedFile] = useState()
     const [preview, setPreview] = useState()
 	const [uploading, setUploading] = useState(false);
-	const [errorMessage, setErrorMessage] = useState(null);
   
     useEffect(() => {
 		document.title = "MGMT | My Account";
@@ -37,6 +36,8 @@ function AccountSettings() {
 
         if (isSuccess) {
             toast.success('Account Information Updated!');
+			setPassword('');
+			setPassword2('');
 			dispatch(reset());
         }
 
@@ -105,7 +106,7 @@ function AccountSettings() {
 					<h4 className='mt-4 mb-3'>Account Information</h4>
 					<form onSubmit={submitHandler}  style={{ width: '700px' }}>
 						<div className="card border-0 mb-3">
-							<div class="card-body">
+							<div className="card-body">
 								<div className='col-sm-12'>
 									<div className="d-flex justify-content-start align-items-center">
 										<span className='profile_img_account'>
