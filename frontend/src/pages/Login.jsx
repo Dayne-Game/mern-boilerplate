@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { login, reset } from '../features/user/UserSlice'
 import { toast } from 'react-toastify'
 
 import { setCredentials } from '../features/auth/AuthSlice'
@@ -16,25 +15,14 @@ function Login() {
     const [password, setPassword] = useState('')
     const [errMsg, setErrMsg] = useState('')
 
-    const [login, { isLoading }] = useLoginMutation()
+    const [login, { isLoading, isError }] = useLoginMutation()
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setErrMsg('')
-    }, [email, password])
-
-    const onChange = (e) => {
-        setFormData((prevState) => ({ ...prevState, [e.target.name]: e.target.value, }))
-    }
-
-    const onSubmit = (event) => {
-        event.preventDefault();
-        const userData = { email, password }
-
-        dispatch(login(userData));
-    }
+		setErrMsg('')
+    }, [password, email])
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -55,23 +43,25 @@ function Login() {
                     break;
                 default:
                     setErrMsg('No Server Response')
+					break
             }
         }
     }
 
-    const handleUserInput = e => setEmail(e.target.value)
+    const handleEmailInput = e => setEmail(e.target.value)
     const handlePasswordInput = e => setPassword(e.target.value)
 
     return (
         <div className='form-container text-center'>
             <h3 className='mb-3'>Sign in</h3>
-            <form onSubmit={onSubmit}>
+			<p>{errMsg && errMsg}</p>
+            <form onSubmit={handleSubmit}>
                 <div className='form-group mb-3'>
-                    <input type="email" className="form-control form-input shadow-none" id="email" name="email" value={email} placeholder='Email address' onChange={onChange}></input>
+                    <input type="email" className="form-control form-input shadow-none" id="email" name="email" value={email} placeholder='Email address' onChange={handleEmailInput}></input>
                 </div>
                 <div className='form-group mb-3'>
                     <div className='input-group'>
-                        <input type="password" className="form-control form-input shadow-none" id="password" name="password" value={password} placeholder='Password' onChange={onChange}></input>
+                        <input type="password" className="form-control form-input shadow-none" id="password" name="password" value={password} placeholder='Password' onChange={handlePasswordInput}></input>
                     </div>
                 </div>
                 <div className='d-grid mb-3'>

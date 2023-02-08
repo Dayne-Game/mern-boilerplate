@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { refreshToken, logout, reset } from '../features/user/UserSlice'
+import { useRefreshTokenMutation } from '../features/auth/AuthService'
+import { setCredentials, logout } from '../features/auth/AuthSlice'
 
 const PersistentLogin = () => {
     const dispatch = useDispatch();
-    const { token, isLoggingOut } = useSelector((state) => state.user);
+    const { token, isLoggingOut } = useSelector((state) => state.auth);
+	const [getRefreshToken] = useRefreshTokenMutation();
     const [haltOutlet, setHaltOutlet] = useState(true);
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         if(!token && !isLoggingOut) {
-            dispatch(refreshToken());
+            getRefreshToken().then(res => {
+				if(res?.data) {
+					const { user, accessToken } = res.data
+					if(accessToken) {
+						dispatch(setCredentials({ user, accessToken }))
+					}
+				} else {
+					dispatch(logout())
+				}
+			}).then(() => setHaltOutlet(false))
         } else {
             setHaltOutlet(false)
         }
-    }, [token, refreshToken, dispatch, setHaltOutlet])
+    }, [token, isLoggingOut, getRefreshToken, dispatch, setHaltOutlet])
 
     return haltOutlet ? <p>Loading...</p> : <Outlet />
 }

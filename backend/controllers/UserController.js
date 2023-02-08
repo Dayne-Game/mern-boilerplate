@@ -4,7 +4,7 @@ import User from "../models/UserModel.js";
 import { v4 as uuid } from "uuid"
 import jwt from "jsonwebtoken";
 
-const accessTokenExpiry = 100 // minutes
+const accessTokenExpiry = 1 // minutes
 const refreshTokenExpiry = 12 // hours
 
 const refreshTokenOptions = {
@@ -24,7 +24,7 @@ const Login = asyncHandler(async (req, res) => {
     // Get User from Database
     const user = await User.findOne({ email });
 
-	if(!user && !await user.matchPassword(password)) {
+	if(!user || !await user.matchPassword(password)) {
 		res.status(400); throw new Error("Invalid Login Attempt");
 	}
 

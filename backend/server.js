@@ -6,7 +6,6 @@ import morgan from "morgan";
 import { notFound, errorHandler } from "./middleware/ErrorMiddleware.js";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
-import cors from 'cors'
 
 // Import Routes
 import UserRoutes from "./routes/UserRoutes.js";

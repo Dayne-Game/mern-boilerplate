@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from "../features/user/UserSlice"
+import { selectCurrentUser } from '../features/auth/AuthSlice';
 
 function Sidebar() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
-	const { user } = useSelector((state) => state.user)
+	const user = useSelector(selectCurrentUser);
 
 	const onLogout = () => {
 		dispatch(logout());
