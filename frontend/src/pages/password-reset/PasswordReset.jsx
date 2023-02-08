@@ -2,44 +2,57 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
-import { reset, resetPassword } from "../../features/reset-password/ResetPasswordSlice";
+import { useResetPasswordMutation } from '../../features/reset-password/ResetPasswordService';
 
 function PasswordReset() {
 	const [password, setPassword] = useState("");
+	const [successMessage, setSuccessMessage] = useState("");
+	const [errorMessage, setErrorMessage] = useState("");
+	const [resetPassword, { isLoading, isSuccess }] = useResetPasswordMutation();
 
 	var { id, resetToken } = useParams();
 
-
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const { isLoading, isError, isSuccess, message } = useSelector((state) => state.resetPassword);
+	useEffect(() => {
+		if(isSuccess) {
+			setSuccessMessage('Password has been reset')
+			navigate('/login');
+		}
+	}, [isSuccess])
 
 	useEffect(() => {
+		setErrorMessage('')
+	}, [ password ])
 
-		if(isError) {
-			toast.error(message);
-			dispatch(reset())
-		}
-
-		if(isSuccess) {
-			toast.success("Password has been Reset");
-			navigate('/login');
-			dispatch(reset());
-		}
-	}, [ isSuccess, isError, message, dispatch, navigate ])
-
-	const onSubmit = (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		dispatch(resetPassword({id, resetToken, password}));
+
+		try {
+			await resetPassword({ id, resetToken, password }).unwrap()
+		} catch (error) {
+			switch(error?.status) {
+				case 400:
+				case 401:
+					setErrorMessage("User with given email doesn't exist")
+					break;
+				default:
+					setErrorMessage('No Server Response')
+					break;
+			}
+		}
 	}
+
+	const handlePasswordInput = e => setPassword(e.target.value)
 
 	return (
 		<div className="form-container text-center">
 			<h3 className='mb-3'>Forgotten Password?</h3>
+			{successMessage &&  <div className='alert alert-success' role="alert">{successMessage}</div>}
+			{errorMessage &&  <div className='alert alert-danger' role="alert">{errorMessage}</div>}
 			<form onSubmit={onSubmit}>
 				<div className='form-group mb-3'>
-					<input type="password" className="form-control form-input shadow-none" id="password" name="password" value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)}></input>
+					<input type="password" className="form-control form-input shadow-none" id="password" name="password" value={password} placeholder='Password' onChange={handlePasswordInput}></input>
 				</div>
 				<div className='d-grid mb-3'>
                     <button type="submit" className="btn btn-primary btn-block p-10">{ isLoading ? <i className="fa-solid fa-circle-notch fa-spin loading-btn-size"></i> : "Reset Password" }</button>

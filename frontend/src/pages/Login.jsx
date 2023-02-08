@@ -8,14 +8,11 @@ import { useLoginMutation } from '../features/auth/AuthService'
 import { setUseProxies } from 'immer'
 
 function Login() {
-
-    const [formData, setFormData] = useState({ email: '', password: '' });
-
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errMsg, setErrMsg] = useState('')
 
-    const [login, { isLoading, isError }] = useLoginMutation()
+    const [login, { isLoading }] = useLoginMutation()
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -54,7 +51,7 @@ function Login() {
     return (
         <div className='form-container text-center'>
             <h3 className='mb-3'>Sign in</h3>
-			<p>{errMsg && errMsg}</p>
+			<div className={`alert alert-danger ${errMsg ? '' : 'd-none'}`} role="alert">{errMsg}</div>
             <form onSubmit={handleSubmit}>
                 <div className='form-group mb-3'>
                     <input type="email" className="form-control form-input shadow-none" id="email" name="email" value={email} placeholder='Email address' onChange={handleEmailInput}></input>

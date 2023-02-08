@@ -1,34 +1,22 @@
-import axios from 'axios';
+import { apiSlice } from '../../app/api/ApiSlice';
 
-const API_URL = '/api/reset-password/';
+export const ResetPasswordService = apiSlice.injectEndpoints({
+	endpoints: builder => ({
+		resetPasswordRequest: builder.mutation({
+			query: email => ({
+				url: '/api/reset-password',
+				method: 'POST',
+				body: { email }
+			})
+		}),
+		resetPassword: builder.mutation({
+			query: reset_data => ({
+				url: `/api/reset-password/${reset_data.id}/${reset_data.resetToken}`,
+				method: 'POST',
+				body: { reset_data }
+			})
+		})
+	})
+})
 
-const resetPasswordRequest = async (email) => {
-	const config = {
-		headers: {
-			"Content-Type": "application/json",
-		},
-	};
-
-	const response = await axios.post(API_URL, { email }, config);
-
-	return response.data;
-}
-
-const resetPassword = async (reset_data) => {
-	const config = {
-		headers: {
-			"Content-Type": "application/json",
-			'Accept': 'application/json'
-		},
-	};
-
-	const password = reset_data.password;
-
-	const response = await axios.post(`/api/reset-password/${reset_data.id}/${reset_data.resetToken}`, { password }, config);
-
-	return response.data;
-}
-
-const ResetPasswordService = { resetPassword, resetPasswordRequest };
-
-export default ResetPasswordService;
+export const { useResetPasswordRequestMutation, useResetPasswordMutation } = ResetPasswordService

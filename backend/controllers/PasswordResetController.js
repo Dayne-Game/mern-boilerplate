@@ -10,6 +10,8 @@ import asyncHandler from "express-async-handler";
 const sendPasswordReset = asyncHandler(async (req, res) => {
 	const user = await User.findOne({ email: req.body.email });
 
+	console.log(user);
+
 	if (!user) {
 		res.status(400);
 		throw new Error("user with given email doesn't exist");
