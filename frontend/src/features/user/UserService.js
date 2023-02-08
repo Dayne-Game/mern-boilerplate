@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { CheckQueryStatus } from "../../helper/QueryChecker.js";
 import { DecodeToken } from '../../helper/DecodeToken';
 
 const API_URL = '/api/users/';
@@ -8,12 +9,11 @@ const login = async (user_data) => {
 
     const response = await axios.post(API_URL + 'login', user_data)
 
-    if(response.data) {
-        // Add Token
-        localStorage.setItem('token', JSON.stringify(response.data));
-    }   
+	const token = JSON.stringify(response.data.accessToken);
+
+	console.log(response);  
     
-    return DecodeToken(response.data);
+    return response.data;
 };
 
 const register = async (user_data) => {
@@ -25,6 +25,19 @@ const register = async (user_data) => {
 
 	return DecodeToken(response.data);
 };
+
+const refreshToken = async (token) => {
+
+	const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	}
+
+	const response = await axios.get('/api/auth/refresh', config);
+
+	return response.data;
+}
 
 const update = async (user_data, token) => {
 
@@ -56,12 +69,20 @@ const delete_user = async (token) => {
 };
 
 // Logout User
-const logout = () => {
-    localStorage.clear();
+const logout = async (token) => {
+    const config = {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	}
+
+	const response = await axios.get('/api/auth/logout', config);
+
+	return response.data;
 };
 
 const UserService = {
-    login, register, update, delete_user, logout
+    login, register, refreshToken, update, delete_user, logout,
 }       
 
 export default UserService;

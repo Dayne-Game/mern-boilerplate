@@ -1,10 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit'
-import UserReducer from "../features/user/UserSlice";
-import PasswordResetReducer from "../features/reset-password/ResetPasswordSlice";
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
+import { apiSlice } from './api/ApiSlice';
+import authReducer from '../features/auth/AuthSlice';
 
 export const store = configureStore({
     reducer: {
-        user: UserReducer,
-		resetPassword: PasswordResetReducer
-    }
+        [apiSlice.reducerPath]: apiSlice.reducer,
+        auth: authReducer
+    },
+    middleware: getDefaultMiddleware => 
+        getDefaultMiddleware().concat(apiSlice.middleware),
+    devTools: true
 })

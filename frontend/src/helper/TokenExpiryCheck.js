@@ -13,6 +13,4 @@ export const TokenExpiryCheck = () => {
         document.location.href = "/login"
         return true
     }
-
-    console.log('checked...');
 }
