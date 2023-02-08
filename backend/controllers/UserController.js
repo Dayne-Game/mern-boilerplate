@@ -1,6 +1,19 @@
 import asyncHandler from "express-async-handler";
 import GenerateToken from "../utils/GenerateToken.js";
 import User from "../models/UserModel.js";
+import { v4 as uuid } from "uuid"
+import jwt from "jsonwebtoken";
+
+const accessTokenExpiry = 100 // minutes
+const refreshTokenExpiry = 12 // hours
+
+const refreshTokenOptions = {
+    httpOnly: true,
+	path: '/',
+    secure: process.env.NODE_ENV != 'development',
+    sameSite: 'Lax',
+    maxAge: refreshTokenExpiry * 60 * 60 * 1000
+}
 
 // @DESC    Login User
 // @ROUTE   /api/users/login
@@ -11,11 +24,20 @@ const Login = asyncHandler(async (req, res) => {
     // Get User from Database
     const user = await User.findOne({ email });
 
-    if(user && await user.matchPassword(password)) {
-        res.json(GenerateToken({ id: user._id, name: user.name, email: user.email, image: user.image }))
-    } else {
-        res.status(400); throw new Error("Email or Password is Invalid");
-    }
+	if(!user && !await user.matchPassword(password)) {
+		res.status(400); throw new Error("Invalid Login Attempt");
+	}
+
+	user.tokenId = uuid();
+
+	await user.save();
+
+	const accessToken = jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_KEY, { expiresIn: `${accessTokenExpiry}m` })
+	const refreshToken = jwt.sign({ email: user.email, tokenId: user.tokenId }, process.env.REFRESH_TOKEN_KEY, { expiresIn: `${refreshTokenExpiry}h` })
+
+	res.cookie('jwt', refreshToken, refreshTokenOptions);
+
+	res.json({ accessToken, user: { email: user.email, name: user.name, image: user.image } })
 });
 
 // @DESC    Register User
@@ -43,7 +65,7 @@ const Register = asyncHandler(async(req, res) => {
 
 	const user = await new_user.save();
 
-	res.json(GenerateToken({ id: user._id, name: user.name, email: user.email, image: user.image }));
+	res.json(GenerateToken({ name: user.name, email: user.email, image: user.image }));
 });
 
 // @DESC	Get Logged in User Details
@@ -63,7 +85,7 @@ const Current = asyncHandler(async(req, res) => {
 // @ROUTE   /api/users/update/
 // @ACCESS  PRIVATE
 const Update = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user.id)
+	const user = await User.findOne({ email: req.user.email });
 
 	if (user) {
 
@@ -86,7 +108,7 @@ const Update = asyncHandler(async (req, res) => {
 
 		const updatedUser = await user.save()
 
-		res.json(GenerateToken({ id: updatedUser._id, name: updatedUser.name, image: updatedUser.image, email: updatedUser.email }));
+		res.json(GenerateToken({ name: updatedUser.name, image: updatedUser.image, email: updatedUser.email }));
 	} else {
 		res.status(404)
 		throw new Error('User not found')
@@ -97,7 +119,7 @@ const Update = asyncHandler(async (req, res) => {
 // @ROUTE   /api/users/delete/:id
 // @ACCESS  PRIVATE
 const Delete = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user._id);
+	const user = await User.findOne({ email: req.user.email });
 
 	if (user) {
 		await user.remove()

@@ -5,17 +5,21 @@ import dotenv from "dotenv";
 import morgan from "morgan";
 import { notFound, errorHandler } from "./middleware/ErrorMiddleware.js";
 import connectDB from "./config/db.js";
+import cookieParser from "cookie-parser";
+import cors from 'cors'
 
 // Import Routes
 import UserRoutes from "./routes/UserRoutes.js";
 import UploadRoutes from "./routes/UploadRoutes.js";
 import ResetPasswordRoutes from "./routes/ResetPasswordRoutes.js";
+import AuthRoutes from "./routes/AuthRoutes.js";
 
 dotenv.config();
 
 connectDB();
 
 const app = express();
+app.use(cookieParser());
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -23,9 +27,11 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 
+
 app.use("/api/users", UserRoutes);
 app.use("/api/upload", UploadRoutes);
 app.use("/api/reset-password", ResetPasswordRoutes);
+app.use('/api/auth', AuthRoutes);
 
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));

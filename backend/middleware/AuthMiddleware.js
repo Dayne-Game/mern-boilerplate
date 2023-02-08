@@ -10,18 +10,33 @@ const protect = asyncHandler(async (req, res, next) => {
           // Grab token from auth header
           token = req.headers.authorization.split(" ")[1];
           // Verify the decrypted token
-          const decoded = jwt.verify(token, process.env.JWT_SECRET);
+          const { email } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
+            if(err || !decoded.email) {
+              res.status(403); 
+              throw new Error('Forbidden');
+            } 
 
-          // store user data into req.user
-          req.user = await User.findById(decoded.id).select("-password");
-    
-          next();
+            req.user = await User.findOne({ email }).select("-password");
+
+            next();
+          });
         } catch (error) {
           console.error(error);
           res.status(401);
-          throw new Error("Not authorized, token failed");
+          throw new Error("Unauthorized");
         }
     }
 })
 
-export { protect };
+const jwtCookieeRequired = (req, res, next) => {
+  const cookies = req.cookies
+
+  if(!cookies?.jwt) {
+    res.status(401); 
+    throw new Error('Unauthorized');
+  }
+
+  next();
+}
+
+export { protect, jwtCookieeRequired };

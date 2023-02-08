@@ -19,6 +19,10 @@ const userSchema = mongoose.Schema(
         image: {
             type: String,
             default: "/uploads/sample.png",
+        },
+        tokenId: {
+            type: String,
+            default: false
         }
     },
     {
