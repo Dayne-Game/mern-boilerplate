@@ -34,7 +34,7 @@ function PasswordReset() {
 			switch(error?.status) {
 				case 400:
 				case 401:
-					setErrorMessage("User with given email doesn't exist")
+					setErrorMessage("Problem with Reseting Password")
 					break;
 				default:
 					setErrorMessage('No Server Response')

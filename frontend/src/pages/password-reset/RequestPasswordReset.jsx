@@ -15,6 +15,7 @@ function RequestPasswordReset() {
 
 	useEffect(() => {
 		setErrorMessage('')
+		setSuccessMessage('')
 	}, [ email ])
 
 	const onSubmit = async (e) => {

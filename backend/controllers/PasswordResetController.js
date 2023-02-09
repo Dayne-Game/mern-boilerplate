@@ -8,9 +8,8 @@ import asyncHandler from "express-async-handler";
 // @route   POST /api/password-reset
 // @access  Public
 const sendPasswordReset = asyncHandler(async (req, res) => {
-	const user = await User.findOne({ email: req.body.email });
 
-	console.log(user);
+	const user = await User.findOne({ email: req.body.data.email });
 
 	if (!user) {
 		res.status(400);
@@ -27,9 +26,10 @@ const sendPasswordReset = asyncHandler(async (req, res) => {
 		}
 
 		const link = `${process.env.BASEURL}/password-reset/${user._id}/${token.token}`;
+
 		await sendEmail(user.email, "Password reset", link);
 
-		res.send("password reset link sent to your email account");
+		res.send({ message: "password reset link sent to your email account" });
 	} catch (error) {
 		res.status(500);
 		console.log(error);
@@ -50,11 +50,11 @@ const resetUserPassword = asyncHandler(async (req, res) => {
 		});
 		if (!token) return res.status(400).send("Invalid link or expired");
 
-		user.password = req.body.password;
+		user.password = req.body.data.password;
 		await user.save();
 		await token.delete();
 
-		res.send("password reset sucessfully.");
+		res.send({ message: "password reset sucessfully." });
 	} catch (error) {
 		res.status(500);
 		console.log(error);
