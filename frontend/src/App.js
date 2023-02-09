@@ -1,12 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Layout from './components/Layout'
-import { TokenExpiryCheck } from './helper/TokenExpiryCheck'
-import Register from './pages/Register'
 import AccountSettings from './pages/account/AccountSettings'
 import RequestPasswordReset from './pages/password-reset/RequestPasswordReset';
 import PasswordReset from './pages/password-reset/PasswordReset';

@@ -9,17 +9,18 @@ const protect = asyncHandler(async (req, res, next) => {
         try {
           // Grab token from auth header
           token = req.headers.authorization.split(" ")[1];
+
           // Verify the decrypted token
           jwt.verify(token, process.env.ACCESS_TOKEN_KEY, async (err, decoded) => {
 			
-			if(err || !decoded.email) {
-              res.status(403).json({ message: 'FORBIDDEN' });
+			if(err || !decoded) {
+              return res.status(403).json({ message: 'FORBIDDEN' });
             } 
 
 			jwt.verify(req.cookies.jwt, process.env.REFRESH_TOKEN_KEY, asyncHandler(async (err) => {
 				// Requires another login
 				if(err) {
-					res.status(401).clearCookie('jwt');
+					return res.status(401).clearCookie('jwt');
 				}
 			}))
 

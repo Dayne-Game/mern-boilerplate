@@ -33,7 +33,7 @@ const refresh = (req, res) => {
 }
 
 const logout = (req, res) => {
-    res.clearCookie('jwt').json({ message: 'Cookie Cleared' }).send();
+    res.clearCookie('jwt').json({ message: 'Cookie Cleared' });
 }
 
 export { refresh, logout };

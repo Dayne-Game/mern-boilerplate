@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { toast } from 'react-toastify'
 import { useResetPasswordMutation } from '../../features/reset-password/ResetPasswordService';
 
 function PasswordReset() {
@@ -19,7 +17,7 @@ function PasswordReset() {
 			setSuccessMessage('Password has been reset')
 			navigate('/login');
 		}
-	}, [isSuccess])
+	}, [isSuccess, navigate])
 
 	useEffect(() => {
 		setErrorMessage('')

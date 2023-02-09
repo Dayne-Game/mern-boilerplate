@@ -33,7 +33,7 @@ const Login = asyncHandler(async (req, res) => {
 	await user.save();
 
 	const accessToken = jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_KEY, { expiresIn: `${accessTokenExpiry}m` })
-	const refreshToken = jwt.sign({ email: user.email, tokenId: user.tokenId }, process.env.REFRESH_TOKEN_KEY, { expiresIn: `${refreshTokenExpiry}s` })
+	const refreshToken = jwt.sign({ email: user.email, tokenId: user.tokenId }, process.env.REFRESH_TOKEN_KEY, { expiresIn: `${refreshTokenExpiry}h` })
 
 	res.cookie('jwt', refreshToken, refreshTokenOptions);
 
