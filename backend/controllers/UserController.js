@@ -33,7 +33,7 @@ const Login = asyncHandler(async (req, res) => {
 	await user.save();
 
 	const accessToken = jwt.sign({ email: user.email }, process.env.ACCESS_TOKEN_KEY, { expiresIn: `${accessTokenExpiry}m` })
-	const refreshToken = jwt.sign({ email: user.email, tokenId: user.tokenId }, process.env.REFRESH_TOKEN_KEY, { expiresIn: `${refreshTokenExpiry}h` })
+	const refreshToken = jwt.sign({ email: user.email, tokenId: user.tokenId }, process.env.REFRESH_TOKEN_KEY, { expiresIn: `${refreshTokenExpiry}s` })
 
 	res.cookie('jwt', refreshToken, refreshTokenOptions);
 
@@ -108,7 +108,9 @@ const Update = asyncHandler(async (req, res) => {
 
 		const updatedUser = await user.save()
 
-		res.json(GenerateToken({ name: updatedUser.name, image: updatedUser.image, email: updatedUser.email }));
+		const accessToken = jwt.sign({ email: updatedUser.email }, process.env.ACCESS_TOKEN_KEY, { expiresIn: `${accessTokenExpiry}m` })
+
+		res.json({ accessToken, user: { email: updatedUser.email, name: updatedUser.name, image: updatedUser.image } });
 	} else {
 		res.status(404)
 		throw new Error('User not found')

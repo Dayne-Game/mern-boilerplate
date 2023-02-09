@@ -1,7 +1,17 @@
 import jwt from "jsonwebtoken";
+import User from '../models/UserModel.js';
+import asyncHandler from "express-async-handler";
 
-const GenerateToken = (user_data) => {
-    return jwt.sign(user_data, process.env.JWT_SECRET, {expiresIn: "1d"});
+const CheckRefreshToken = (refreshToken) => {
+	jwt.verify(refreshToken, process.env.REFRESH_TOKEN_KEY, asyncHandler(async (err, decoded) => {
+		// Requires another login
+		if(err) {
+			clearCookie('jwt').send();
+			return false;
+		}
+
+		return true
+	}))
 }
 
-export default GenerateToken;
+export default CheckRefreshToken;

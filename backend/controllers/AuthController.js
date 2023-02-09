@@ -18,7 +18,7 @@ const refresh = (req, res) => {
             if(err && decoded) return res.status(401).json({ message: 'Invalid Credentials' })
 
             // Invalid token
-            if(err && !decoded) return res.status(403).json({ message: 'Forbidden' })
+            if(err && !decoded) return res.status(403).clearCookie('jwt').json({ message: 'Forbidden' });
 
             // Check user and tokenID is still active
             const user = await User.findOne({ email: decoded.email }).exec()

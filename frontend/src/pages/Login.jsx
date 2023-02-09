@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
-
 import { setCredentials } from '../features/auth/AuthSlice'
 import { useLoginMutation } from '../features/auth/AuthService'
-import { setUseProxies } from 'immer'
 
 function Login() {
     const [email, setEmail] = useState('')

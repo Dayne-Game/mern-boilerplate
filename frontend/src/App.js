@@ -12,6 +12,7 @@ import RequestPasswordReset from './pages/password-reset/RequestPasswordReset';
 import PasswordReset from './pages/password-reset/PasswordReset';
 import TimeLog from './pages/TimeLog';
 import PersistentLogin from './components/PersistLogin';
+import RequireAuth from './components/RequireAuth';
 
 function App() {
   return (
@@ -23,13 +24,15 @@ function App() {
             <Route path="/request-password-reset" element={<RequestPasswordReset />} />
             <Route path="/password-reset/:id/:resetToken" element={<PasswordReset />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            {/* <Route path="/register" element={<Register />} /> */}
 
             {/* Protected Routes */}
             <Route element={<PersistentLogin />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/my-account" element={<AccountSettings />} />
-              <Route path="/timelogs" element={<TimeLog />} />
+				<Route element={<RequireAuth />}>
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/my-account" element={<AccountSettings />} />
+					<Route path="/timelogs" element={<TimeLog />} />
+				</Route>
             </Route>
 
           </Route>

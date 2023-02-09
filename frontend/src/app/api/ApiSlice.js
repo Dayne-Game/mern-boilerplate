@@ -28,8 +28,7 @@ const baseQueryWrapper = async (args, api, extraOptions) => {
 
         // Unauthorized
         case 403:
-            const refreshResult = await baseQuery('/auth/refresh', api, extraOptions)
-
+            const refreshResult = await baseQuery('api/auth/refresh', api, extraOptions)
             if (refreshResult?.data) {
                 api.dispatch(setCredentials(refreshResult?.data))
                 result = await baseQuery(args, api, extraOptions)

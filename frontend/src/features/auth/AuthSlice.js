@@ -5,7 +5,7 @@ const AuthSlice = createSlice({
     initialState: { user: null, token: null },
     reducers: {
         setCredentials: (state, action) => {
-            const { user, accessToken } = action.payload
+            const { accessToken, user} = action.payload
 
             state.user = user
             state.token = accessToken

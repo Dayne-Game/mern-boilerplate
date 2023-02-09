@@ -6,7 +6,7 @@ import { setCredentials, logout } from '../features/auth/AuthSlice'
 
 const PersistentLogin = () => {
     const dispatch = useDispatch();
-    const { token, isLoggingOut } = useSelector((state) => state.auth);
+    const { token, isLoggingOut } = useSelector((state) => state?.auth);
 	const [getRefreshToken] = useRefreshTokenMutation();
     const [haltOutlet, setHaltOutlet] = useState(true);
 
@@ -14,9 +14,9 @@ const PersistentLogin = () => {
         if(!token && !isLoggingOut) {
             getRefreshToken().then(res => {
 				if(res?.data) {
-					const { user, accessToken } = res.data
+					const { accessToken, user } = res.data
 					if(accessToken) {
-						dispatch(setCredentials({ user, accessToken }))
+						dispatch(setCredentials({ accessToken, user }))
 					}
 				} else {
 					dispatch(logout())

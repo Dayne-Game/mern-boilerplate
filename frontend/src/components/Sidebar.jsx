@@ -1,16 +1,23 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout, reset } from "../features/user/UserSlice"
-import { selectCurrentUser } from '../features/auth/AuthSlice';
+import { selectCurrentUser, logout } from '../features/auth/AuthSlice';
+import { useLogoutMutation } from '../features/auth/AuthService';
 
 function Sidebar() {
 	const navigate = useNavigate();
 	const dispatch = useDispatch()
 	const user = useSelector(selectCurrentUser);
 
-	const onLogout = () => {
-		dispatch(logout());
-		navigate('/login')
+	const [apiLogout, { isLoading }] = useLogoutMutation()
+
+	const onLogout = async (e) => {
+
+		e.preventDefault();
+		if(!isLoading) {
+			await apiLogout()
+			dispatch(logout())
+			navigate('/login')
+		}
 	}
 
 	const toggle = () => {

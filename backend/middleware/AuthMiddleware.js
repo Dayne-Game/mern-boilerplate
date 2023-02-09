@@ -10,15 +10,21 @@ const protect = asyncHandler(async (req, res, next) => {
           // Grab token from auth header
           token = req.headers.authorization.split(" ")[1];
           // Verify the decrypted token
-          const { email } = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-            if(err || !decoded.email) {
-              res.status(403); 
-              throw new Error('Forbidden');
+          jwt.verify(token, process.env.ACCESS_TOKEN_KEY, async (err, decoded) => {
+			
+			if(err || !decoded.email) {
+              res.status(403).json({ message: 'FORBIDDEN' });
             } 
 
-            req.user = await User.findOne({ email }).select("-password");
+			jwt.verify(req.cookies.jwt, process.env.REFRESH_TOKEN_KEY, asyncHandler(async (err) => {
+				// Requires another login
+				if(err) {
+					res.status(401).clearCookie('jwt');
+				}
+			}))
 
-            next();
+			req.user = await User.findOne({ email: decoded.email }).select("-password");
+			next();
           });
         } catch (error) {
           console.error(error);
